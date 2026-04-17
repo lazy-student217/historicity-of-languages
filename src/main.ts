@@ -1,5 +1,6 @@
 import { Application, Assets, Text, Container } from "pixi.js";
 import Gruvbox from "./gruvbox.json";
+import "@pixi/layout";
 import LibreBaskervilleFont from "@fontsource-variable/libre-baskerville/files/libre-baskerville-latin-wght-normal.woff2?url";
 
 async function load_assets() {
@@ -14,15 +15,24 @@ async function load_assets() {
 (async () => {
   const app = new Application();
   await app.init({ background: Gruvbox.bg, resizeTo: window });
-  const app_div = document.getElementById("app")!;
-  app_div.appendChild(app.canvas);
+  const appDiv = document.getElementById("app")!;
+  appDiv.appendChild(app.canvas);
   await load_assets();
-  const container = new Container();
-  container.x = app.screen.width / 2;
-  container.y = app.screen.height / 2;
-  container.pivot.x = container.width / 2;
-  container.pivot.y = container.height / 2;
-  app.stage.addChild(container);
+  app.stage.layout = {
+    width: app.screen.width,
+    height: app.screen.height,
+    justifyContent: "center",
+    alignItems: "center",
+  };
+
+  const quoteContainer = new Container({
+    layout: {
+      justifyContent: "center",
+      flexDirection: "column",
+      gap: 30,
+    },
+  });
+  app.stage.addChild(quoteContainer);
 
   const text = new Text({
     text: "The only languages that do not change are the dead ones.",
@@ -32,7 +42,20 @@ async function load_assets() {
       fontFamily: "Libre Baskerville",
     },
     anchor: 0.5,
+    layout: true,
   });
 
-  container.addChild(text);
+  const author = new Text({
+    text: "-- David Crystal",
+    style: {
+      fill: Gruvbox.fg,
+      fontSize: 36,
+      fontFamily: "Libre Baskerville",
+    },
+    anchor: 0.5,
+    layout: true,
+  });
+
+  quoteContainer.addChild(text);
+  quoteContainer.addChild(author);
 })();
