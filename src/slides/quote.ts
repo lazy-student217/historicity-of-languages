@@ -1,11 +1,12 @@
 import { Application, Container, HTMLText } from "pixi.js";
 import Gruvbox from "../gruvbox.json";
 import { Slide, SlideInstance } from "../main";
+import { easeInOutCubic, progressAnimation } from "../lib/animation";
 
 export default ((app: Application) => {
     const instance = {
         app,
-        cleanup: () => { },
+        cleanup: async () => { },
         async enter() {
             const quoteContainer = new Container({
                 layout: {
@@ -43,15 +44,25 @@ export default ((app: Application) => {
             });
             quoteContainer.addChild(text);
             quoteContainer.addChild(author);
-            this.cleanup = () => {
+            this.cleanup = async () => {
+                await progressAnimation(app.ticker, (p) => {
+                    quoteContainer.alpha = 1 - p;
+                    quoteContainer.y = 400 * p;
+                }, easeInOutCubic);
                 text.destroy();
                 author.destroy();
                 quoteContainer.destroy();
             };
+            quoteContainer.alpha = 0;
+            await progressAnimation(app.ticker, (p) => {
+                quoteContainer.alpha = p;
+                quoteContainer.position.y = -400 * (1 - p);
+            }, easeInOutCubic);
         },
         async exit() {
+            await this.cleanup();
             app.stage.removeChildren();
-            this.cleanup();
+
         },
         async proceed() { },
     };
