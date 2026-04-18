@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
-    "@fontsource-variable/libre-baskerville": "^5.2.1",
+    "@fontsource-variable/alegreya": "^5.2.8",
     "@pixi/layout": "^3.2.0",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.1.2",

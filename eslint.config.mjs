@@ -15,6 +15,9 @@ export default tseslint.config(
       ecmaVersion: "latest",
       sourceType: "module",
     },
-    rules: {},
+    rules: {
+      indent: [4, "tab"],
+      "no-tabs": 0,
+    },
   },
 );
